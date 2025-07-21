@@ -6,6 +6,7 @@ Gem::Specification.new do |spec|
   spec.files       = Dir["lib/**/*"]
   spec.require_paths = ["lib"]
   spec.add_dependency "pg_query"
+  spec.add_dependency "zeitwerk"
 
   spec.add_development_dependency "rspec", "~> 3.12"
 end

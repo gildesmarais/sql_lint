@@ -1,12 +1,10 @@
-require "sql_lint/registry"
-require "sql_lint/base_checker"
-require "sql_lint/runner"
-require "sql_lint/config"
+# frozen_string_literal: true
 
-adapter = ActiveRecord::Base.connection.adapter_name.downcase
+require "zeitwerk"
 
-Dir[File.join(__dir__, "sql_lint/checkers/default/*.rb")].each { |f| require f }
+loader = Zeitwerk::Loader.for_gem
+loader.setup
 
-if %w[postgresql mysql sqlite].include?(adapter)
-  Dir[File.join(__dir__, "sql_lint/checkers/#{adapter}/*.rb")].each { |f| require f }
+
+module SqlLint
 end

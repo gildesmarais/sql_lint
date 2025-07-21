@@ -1,4 +1,4 @@
-require "sql_lint/config"
+require "pg_query"
 
 module SqlLint
   class Runner
