@@ -1,4 +1,4 @@
-require "pg_query"
+require 'pg_query'
 
 module SqlLint
   class Runner
@@ -16,7 +16,7 @@ module SqlLint
 
     def self.run_sequential(sql)
       Registry.all.each do |checker_class|
-        checker_name = checker_class.name.split("::").last(2).join("/")
+        checker_name = checker_class.name.split('::').last(2).join('/')
         next unless @config.enabled?(checker_name)
 
         checker = checker_class.new(sql)
@@ -29,7 +29,7 @@ module SqlLint
     def self.run_parallel(sql)
       tasks = Registry.all.map do |checker_class|
         Thread.new do
-          checker_name = checker_class.name.split("::").last(2).join("/")
+          checker_name = checker_class.name.split('::').last(2).join('/')
           next unless @config.enabled?(checker_name)
 
           checker = checker_class.new(sql)
@@ -39,7 +39,7 @@ module SqlLint
       end
 
       tasks.each do |task|
-        checker_name, offenses = task.value
+        _, offenses = task.value
         next if offenses.nil?
 
         offenses.each do |msg|

@@ -19,8 +19,8 @@ module SqlLint
     end
 
     def self.deep_merge(hash1, hash2)
-      merger = proc { |key, v1, v2|
-        if Hash === v1 && Hash === v2
+      merger = proc { |_key, v1, v2|
+        if v1.is_a?(Hash) && v2.is_a?(Hash)
           v1.merge(v2, &merger)
         else
           v2
@@ -45,7 +45,7 @@ module SqlLint
 
       # Check if specific checker is enabled
       checker_enabled = @config.dig(checker_key, 'Enabled')
-      return checker_enabled != false
+      checker_enabled != false
     end
 
     def runner_parallel?

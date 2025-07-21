@@ -12,7 +12,7 @@ RSpec.configure do |config|
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
   # Enable flags like --only-failures and --next-failure
-  config.example_status_persistence_file_path = "spec/examples.txt"
+  config.example_status_persistence_file_path = 'spec/examples.txt'
 
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
@@ -21,9 +21,7 @@ RSpec.configure do |config|
 
   # Use the documentation formatter for detailed output,
   # unless a formatter has already been configured
-  if config.formatters.none?
-    config.default_formatter = "doc"
-  end
+  config.default_formatter = 'doc' if config.formatters.none?
 
   config.order = :random
 

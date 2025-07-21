@@ -4,7 +4,7 @@ module SqlLint
       class SelectWithoutLimit < BaseChecker
         PATTERN = /\ASELECT\b(?!.*LIMIT)/im
         def offenses
-          PATTERN.match?(@sql) ? ["SELECT without LIMIT"] : []
+          PATTERN.match?(@sql) ? ['SELECT without LIMIT'] : []
         end
       end
     end

@@ -12,8 +12,8 @@ module SqlLint
       @@checkers
     end
 
-    def self.each(&block)
-      @@checkers.each(&block)
+    def self.each(&)
+      @@checkers.each(&)
     end
   end
 end
