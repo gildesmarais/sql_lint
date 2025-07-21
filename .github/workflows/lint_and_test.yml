@@ -1,0 +1,64 @@
+name: lint and test
+
+on: [push]
+
+jobs:
+  setup_env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+    outputs:
+      gem_cache_path: ${{ steps.setup-ruby.outputs.bundler-cache-path }}
+
+  rubocop:
+    runs-on: ubuntu-latest
+    name: Run RuboCop
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Ruby for RuboCop
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+      - name: Run RuboCop
+        run: bundle exec rubocop -D --parallel
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby: ["3.3", "3.4"]
+    name: Ruby ${{ matrix.ruby }} Tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run RSpec tests
+        run: bundle exec rspec
+
+  yard:
+    runs-on: ubuntu-latest
+    name: Check YARD Documentation
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Ruby for YARD
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+      - name: Generate YARD Docs and Check Warnings
+        run: bundle exec yard doc --fail-on-warning --no-output

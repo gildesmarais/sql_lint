@@ -10,4 +10,6 @@ group :development do
   gem 'rubocop-rspec'
 
   gem 'rspec', '~> 3.12'
+
+  gem 'yard'
 end
