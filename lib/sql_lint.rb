@@ -1,6 +1,7 @@
 require "sql_lint/registry"
 require "sql_lint/base_checker"
 require "sql_lint/runner"
+require "sql_lint/config"
 
 adapter = ActiveRecord::Base.connection.adapter_name.downcase
 
