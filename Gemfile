@@ -8,4 +8,6 @@ group :development do
   gem 'rubocop'
   gem 'rubocop-performance'
   gem 'rubocop-rspec'
+
+  gem 'rspec', '~> 3.12'
 end

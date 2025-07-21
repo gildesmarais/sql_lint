@@ -17,7 +17,7 @@ RSpec.describe SqlLint::Config do
     end
 
     context 'when a config file exists' do
-      it 'merges user config with default config' do
+      it 'merges user config with default config', :aggregate_failures do # rubocop:disable RSpec/ExampleLength
         Tempfile.create('.sql_lint.yml') do |file|
           user_config = {
             'PostgreSQL' => { 'Enabled' => false },
@@ -29,6 +29,19 @@ RSpec.describe SqlLint::Config do
           config = described_class.load(file.path)
           expect(config['PostgreSQL']['Enabled']).to be(false)
           expect(config['Default/SelectWithoutLimit']['Enabled']).to be(false)
+        end
+      end
+
+      it 'retains default config for unspecified keys' do # rubocop:disable RSpec/ExampleLength
+        Tempfile.create('.sql_lint.yml') do |file|
+          user_config = {
+            'PostgreSQL' => { 'Enabled' => false },
+            'Default/SelectWithoutLimit' => { 'Enabled' => false }
+          }
+          file.write(user_config.to_yaml)
+          file.flush
+
+          config = described_class.load(file.path)
           expect(config['MySQL']['Enabled']).to be(true) # from default
         end
       end

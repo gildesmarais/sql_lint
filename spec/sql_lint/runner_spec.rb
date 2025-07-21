@@ -20,19 +20,22 @@ RSpec.describe SqlLint::Runner do
     end
   end
 
+  let(:original_checkers) { SqlLint::Registry.instance_variable_get(:@checkers) }
+
   before do
-    @original_checkers = SqlLint::Registry.class_variable_get(:@@checkers)
-    SqlLint::Registry.class_variable_set(:@@checkers, [checker_class])
-    allow_any_instance_of(SqlLint::Config).to receive(:enabled?).and_return(true)
+    SqlLint::Registry.instance_variable_set(:@checkers, [checker_class])
   end
 
   after do
-    SqlLint::Registry.class_variable_set(:@@checkers, @original_checkers)
+    SqlLint::Registry.instance_variable_set(:@checkers, original_checkers)
   end
 
   describe '.run' do
     context 'when checkers are enabled' do
-      it 'runs enabled checkers and outputs warnings for offenses' do
+      it 'runs enabled checkers and outputs warnings for offenses' do # rubocop:disable RSpec/ExampleLength
+        config_double = instance_double(SqlLint::Config, runner_parallel?: false)
+        allow(config_double).to receive(:enabled?).with(any_args).and_return(true)
+        allow(SqlLint::Config).to receive(:new).and_return(config_double)
         expect do
           described_class.run(sql)
         end.to output(/\[SQL Lint\] ⚠️ offense message/).to_stderr
@@ -41,7 +44,8 @@ RSpec.describe SqlLint::Runner do
 
     context 'when checkers are disabled' do
       it 'does not output warnings for offenses' do
-        allow_any_instance_of(SqlLint::Config).to receive(:enabled?).and_return(false)
+        allow(SqlLint::Config).to receive(:new).and_return(instance_double(SqlLint::Config, enabled?: false,
+                                                                                            runner_parallel?: false))
         expect do
           described_class.run(sql)
         end.not_to output.to_stderr
@@ -49,12 +53,14 @@ RSpec.describe SqlLint::Runner do
     end
 
     context 'when PgQuery::ParseError is raised' do
-      it 'rescues the error without raising' do
-        SqlLint::Registry.class_variable_set(:@@checkers, [])
+      it 'rescues the error without raising' do # rubocop:disable RSpec/ExampleLength
+        SqlLint::Registry.instance_variable_set(:@checkers, [])
         pg_query_error_class = Class.new(StandardError)
         stub_const('PgQuery', Module.new)
         stub_const('PgQuery::ParseError', pg_query_error_class)
         allow(SqlLint::Registry).to receive(:all).and_raise(PgQuery::ParseError)
+        allow(SqlLint::Config).to receive(:new).and_return(instance_double(SqlLint::Config, enabled?: true,
+                                                                                            runner_parallel?: false))
         expect do
           described_class.run(sql)
         end.not_to raise_error

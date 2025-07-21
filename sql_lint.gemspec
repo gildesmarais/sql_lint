@@ -12,6 +12,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'pg_query'
   spec.add_dependency 'zeitwerk'
 
-  spec.add_development_dependency 'rspec', '~> 3.12'
   spec.metadata['rubygems_mfa_required'] = 'true'
 end

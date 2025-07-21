@@ -3,6 +3,10 @@
 require 'yaml'
 
 module SqlLint
+  # Manages configuration for SqlLint, including loading and merging user config.
+  #
+  # Provides methods to check if specific checkers or categories are enabled,
+  # and whether the runner should execute in parallel.
   class Config
     DEFAULT_CONFIG = {
       'Default' => { 'Enabled' => true },
@@ -35,17 +39,18 @@ module SqlLint
       @config = config_hash
     end
 
+    # Checks if a checker or its category is enabled.
+    #
+    # @param checker_name [String] Checker name like "Default/SelectWithoutLimit"
+    # @return [Boolean]
     def enabled?(checker_name)
-      # checker_name is like "Default/SelectWithoutLimit"
       parts = checker_name.split('/')
       category = parts.first
       checker_key = checker_name
 
-      # Check if category is enabled
       category_enabled = @config.dig(category, 'Enabled')
       return false if category_enabled == false
 
-      # Check if specific checker is enabled
       checker_enabled = @config.dig(checker_key, 'Enabled')
       checker_enabled != false
     end
