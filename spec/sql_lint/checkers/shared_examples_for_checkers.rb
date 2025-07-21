@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples 'a SQL checker' do |checker_class, sql, expected_offenses|
   subject(:checker) { checker_class.new(sql) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sql_lint'
 
 RSpec.configure do |config|

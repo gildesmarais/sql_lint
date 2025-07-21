@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SqlLint
   class BaseChecker
     def self.inherited(subclass)
