@@ -1,13 +1,19 @@
 module SqlLint
   class Registry
-    @checkers = []
+    include Enumerable
+
+    @@checkers = []
 
     def self.register(klass)
-      @checkers << klass
+      @@checkers << klass
     end
 
     def self.all
-      @checkers
+      @@checkers
+    end
+
+    def self.each(&block)
+      @@checkers.each(&block)
     end
   end
 end

@@ -47,5 +47,9 @@ module SqlLint
       checker_enabled = @config.dig(checker_key, 'Enabled')
       return checker_enabled != false
     end
+
+    def runner_parallel?
+      @config.dig('Runner', 'Parallel') == true
+    end
   end
 end

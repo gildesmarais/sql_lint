@@ -39,6 +39,10 @@ PostgreSQL:
 # Disable a specific default check
 Default/SelectWithoutLimit:
   Enabled: false
+
+# Enable parallel runner execution
+Runner:
+  Parallel: true
 ```
 
 ### How it works
@@ -46,6 +50,7 @@ Default/SelectWithoutLimit:
 - The configuration file is merged with the default settings, which enable all checkers by default.
 - You can disable entire categories (e.g., `PostgreSQL`, `MySQL`, `Default`) by setting `Enabled: false`.
 - You can disable individual checkers by specifying their full name, e.g., `Default/SelectWithoutLimit`.
+- You can enable or disable parallel execution of the runner by setting `Runner.Parallel` to `true` or `false`.
 - If a checker or category is not specified, it defaults to enabled.
 
 This configuration system gives you fine-grained control over which SQL linting rules are applied during your test runs.
