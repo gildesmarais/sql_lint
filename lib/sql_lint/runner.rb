@@ -48,13 +48,13 @@ module SqlLint
         checker = checker_class.new(sql, connection:)
         checker.offenses
       rescue StandardError => e
-        warn "[SQL Lint] ❌ Error in #{checker_name || checker_class.name}: #{e.message}"
+        SqlLint::Log.warn("[SQL Lint] ❌ Error in #{checker_name || checker_class.name}: #{e.message}")
         nil
       end
 
       def report_offenses(offenses, sql)
         offenses.each do |msg|
-          warn "[SQL Lint] ⚠️ #{msg}\n  #{sql.strip}"
+          SqlLint::Log.warn("[SQL Lint] ⚠️ #{msg}\n  #{sql.strip}")
         end
       end
     end

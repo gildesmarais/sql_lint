@@ -33,13 +33,17 @@ RSpec.describe SqlLint::Runner do
 
   describe '.run' do
     context 'when checkers are enabled' do
-      it 'runs enabled checkers and outputs warnings for offenses' do # rubocop:disable RSpec/ExampleLength
-        config_double = instance_double(SqlLint::Config, runner_parallel?: false)
-        allow(config_double).to receive(:enabled?).with(any_args).and_return(true)
-        allow(SqlLint::Config).to receive(:new).and_return(config_double)
-        expect do
+      before do
+        allow(SqlLint::Config).to receive(:new).and_return(instance_double(SqlLint::Config, runner_parallel?: false,
+                                                                                            enabled?: true))
+      end
+
+      it 'logs offense messages' do
+        output = capture_log do
           described_class.run(sql)
-        end.to output(/\[SQL Lint\] ⚠️ offense message/).to_stderr
+        end
+
+        expect(output).to match(/\[SQL Lint\] ⚠️ offense message/)
       end
     end
 
