@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'sql_lint'
+require 'active_record'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -28,4 +29,16 @@ RSpec.configure do |config|
   config.order = :random
 
   Kernel.srand config.seed
+
+  config.before(:suite) do
+    ActiveRecord::Base.establish_connection(
+      adapter: 'postgresql',
+      host: 'localhost',
+      port: 5433,
+      # keep in sync with the docker-compose file
+      username: 'test',
+      password: 'test',
+      database: 'sql_lint_test'
+    )
+  end
 end

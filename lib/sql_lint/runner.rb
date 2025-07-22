@@ -8,13 +8,14 @@ module SqlLint
   # Handles execution of all registered checkers and reporting offenses.
   class Runner
     class << self
-      def run(sql)
+      # @param connection [ActiveRecord::Base.connection] Optional database connection.
+      def run(sql, connection: nil)
         config = Config.new(Config.load)
 
         if config.runner_parallel?
-          process_checkers_parallel(sql, config)
+          process_checkers_parallel(sql, config, connection)
         else
-          process_checkers_sequential(sql, config)
+          process_checkers_sequential(sql, config, connection)
         end
       rescue PgQuery::ParseError
         # ignore fragments
@@ -22,16 +23,16 @@ module SqlLint
 
       private
 
-      def process_checkers_sequential(sql, config)
+      def process_checkers_sequential(sql, config, connection)
         Registry.each do |checker_class|
-          offenses = run_single_checker(checker_class, sql, config)
+          offenses = run_single_checker(checker_class, sql, config, connection)
           report_offenses(offenses, sql) unless offenses.nil?
         end
       end
 
-      def process_checkers_parallel(sql, config)
+      def process_checkers_parallel(sql, config, connection)
         threads = Registry.map do |checker_class|
-          Thread.new { run_single_checker(checker_class, sql, config) }
+          Thread.new { run_single_checker(checker_class, sql, config, connection) }
         end
 
         threads.each do |thread|
@@ -40,11 +41,11 @@ module SqlLint
         end
       end
 
-      def run_single_checker(checker_class, sql, config)
+      def run_single_checker(checker_class, sql, config, connection)
         checker_name = checker_class.name.split('::').last(2).join('/')
         return nil unless config.enabled?(checker_name)
 
-        checker = checker_class.new(sql)
+        checker = checker_class.new(sql, connection:)
         checker.offenses
       rescue StandardError => e
         warn "[SQL Lint] ❌ Error in #{checker_name || checker_class.name}: #{e.message}"

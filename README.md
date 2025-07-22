@@ -108,6 +108,36 @@ This flexible system provides **fine-grained control** over your SQL linting rul
 
 ---
 
+## Development
+
+Install Ruby 3.3.x locally.
+
+Start PostgreSQL:
+
+```sh
+docker-compose up -d
+```
+
+Run tests:
+
+```sh
+bundle exec rspec
+```
+
+Run rubocop:
+
+```sh
+bundle exec rubocop
+```
+
+Stop when done:
+
+```sh
+docker-compose down
+```
+
+---
+
 ## Contributing to SqlLint
 
 We'd love your help to make SqlLint even better\! Whether you're fixing bugs, adding new checker rules, improving documentation, or optimizing performance, every contribution is highly valued.

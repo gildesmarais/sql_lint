@@ -12,8 +12,10 @@ module SqlLint
       Registry.register(subclass)
     end
 
-    def initialize(sql)
+    def initialize(sql, connection: nil, **options)
       @sql = sql
+      @connection = connection
+      @options = options
     end
 
     # Returns an array of offense messages found in the SQL.

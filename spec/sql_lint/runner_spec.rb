@@ -10,8 +10,9 @@ RSpec.describe SqlLint::Runner do
         'SqlLint::Checkers::TestChecker'
       end
 
-      def initialize(sql)
+      def initialize(sql, connection: nil, **_options)
         @sql = sql
+        @connection = connection
       end
 
       def offenses
