@@ -1,14 +1,14 @@
-# SqlLint
+# SqlLint: Your SQL Quality Guardian for Rails
 
-## Level Up Your Rails SQL: Catch Issues Early with SqlLint
+## Catch SQL Pitfalls Early, Boost Performance, and Streamline Development
 
 SqlLint is a **minimalist, RuboCop-style SQL linter** designed to seamlessly integrate with your Rails test suite. It automatically catches common and DBMS-specific SQL pitfalls, helping you **write more robust, performant, and secure SQL queries** right when you're developing them.
 
 ---
 
-## Why SqlLint?
+## Why SqlLint? Empowering Developers with Proactive SQL Quality
 
-Databases are often the silent bottleneck and source of subtle bugs. SqlLint acts as your vigilant guardrail, providing **real-time feedback** during your test runs. This means you can:
+Databases are critical, yet SQL-related issues often surface late in the development cycle, leading to costly fixes and performance bottlenecks. SqlLint addresses this by providing **proactive, real-time feedback** directly within your Rails test suite. This empowers you to:
 
 - **Prevent Performance Regressions**: Catch missing `LIMIT` clauses before they hit production.
 - **Avoid Data Anomalies**: Be warned about potentially unsafe `UNION` usage.
@@ -70,7 +70,7 @@ SqlLint comes packed with intelligent checks to safeguard your SQL:
   - **SQLite**
   - **Adapter-agnostic** (default) rules that apply across databases.
 - **Seamless Rails Integration**: Hooks directly into `ActiveRecord`'s SQL notifications, requiring minimal setup.
-- **Extensible Architecture**: Easily add your own custom checkers (perfect for contributions\!).
+- **Extensible Architecture**: Designed for growth, SqlLint makes it straightforward to add your own custom checker rules. This modularity is perfect for extending its capabilities and tailoring it to unique project needs, making it an ideal area for community contributions.
 
 ---
 
@@ -108,32 +108,35 @@ This flexible system provides **fine-grained control** over your SQL linting rul
 
 ---
 
-## Development
+## Getting Started with Development
 
-Install Ruby 3.3.x locally.
+Ready to dive into SqlLint's codebase? Here's how to get your development environment set up quickly. You'll need Ruby 3.3.x and Docker installed.
 
-Start PostgreSQL:
+### 1. Set Up the Database and Run Tests
+
+Simply start the PostgreSQL database and run the test suite using Docker Compose. The `app` service will automatically build the Ruby environment, install dependencies, and execute the tests.
 
 ```sh
-docker-compose up -d
+docker compose up -d db
+docker compose run app
 ```
 
-Run tests:
+To run RuboCop for linting:
 
 ```sh
-bundle exec rspec
+docker compose run app bundle exec rubocop
 ```
 
-Run rubocop:
+When you're finished, you can stop the PostgreSQL container:
 
 ```sh
-bundle exec rubocop
+docker compose down
 ```
 
-Stop when done:
+If you prefer to work with a shell, try:
 
 ```sh
-docker-compose down
+docker compose run --rm app /bin/bash
 ```
 
 ---
@@ -146,22 +149,19 @@ We'd love your help to make SqlLint even better\! Whether you're fixing bugs, ad
 - **Want to implement a new rule?** Check out the `checkers/` directory for examples.
 - **Found a bug?** Please report it\!
 
-For detailed contribution guidelines, please see the [CONTRIBUTING.md](https://www.google.com/search?q=CONTRIBUTING.md) file.
+For detailed contribution guidelines, please see our [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 ---
 
 ## License
 
-This project is licensed under the European Union Public License (EUPL) version 1.2. See the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
+This project is licensed under the European Union Public License (EUPL) version 1.2. See the [LICENSE](LICENSE) file for details.
 
 ---
 
-## Support
+## Community & Future
 
-Encounter an issue or have a question? The best way to get support is to [open an issue on GitHub](https://www.google.com/search?q=https://github.com/your-repo-link/issues).
+We're committed to continuously improving SqlLint and welcome your involvement!
 
----
-
-### What's next for SqlLint?
-
-We're always looking to expand SqlLint's capabilities. Are there specific SQL patterns or DBMS quirks you'd like to see covered? Let us know in the issues\!
+- **Support**: Encounter an issue or have a question? The best way to get support is to [open an issue on GitHub](https://github.com/gildesmarais/sql_lint/issues).
+- **Roadmap & Future Ideas**: We're always looking to expand SqlLint's capabilities. Are there specific SQL patterns or DBMS quirks you'd like to see covered? Have ideas for new features or improvements? Let us know by [opening an issue](https://github.com/gildesmarais/sql_lint/issues) – your feedback shapes our future!
