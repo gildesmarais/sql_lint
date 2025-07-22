@@ -7,6 +7,8 @@ module SqlLint
     module PostgreSQL
       # Checker to detect missing indexes on foreign key columns in PostgreSQL.
       class MissingIndexOnForeignKey < BaseChecker
+        include QueryParserHelpers
+
         def initialize(sql, connection:)
           super
 
@@ -35,16 +37,6 @@ module SqlLint
           end
         rescue PgQuery::ParseError
           []
-        end
-
-        private
-
-        def indexed_column?(table, column)
-          return false unless @connection.data_source_exists?(table)
-
-          @connection.indexes(table).any? { |idx| idx.columns.include?(column) }
-        rescue StandardError
-          false
         end
       end
     end
