@@ -37,6 +37,20 @@ jobs:
       matrix:
         ruby: ["3.3", "3.4"]
     name: Ruby ${{ matrix.ruby }} Tests
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: sql_lint_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -46,12 +60,13 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
       - name: Run RSpec tests
+        env:
+          DATABASE_URL: "postgres://postgres:password@localhost:5432/sql_lint_test"
         run: bundle exec rspec
 
   yard:
     runs-on: ubuntu-latest
     name: Check YARD Documentation
-    needs: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

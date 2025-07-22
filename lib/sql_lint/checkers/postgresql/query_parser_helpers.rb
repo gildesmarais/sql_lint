@@ -5,7 +5,7 @@ require 'pg_query'
 module SqlLint
   module Checkers
     module PostgreSQL
-      module QueryParserHelpers
+      module QueryParserHelpers # rubocop:disable Style/Documentation
         private
 
         def indexed_column?(table, column)

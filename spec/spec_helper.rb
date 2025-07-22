@@ -34,14 +34,6 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 
   config.before(:suite) do
-    ActiveRecord::Base.establish_connection(
-      adapter: 'postgresql',
-      host: 'localhost',
-      port: 5433,
-      # keep in sync with the docker-compose file
-      username: 'test',
-      password: 'test',
-      database: 'sql_lint_test'
-    )
+    ActiveRecord::Base.establish_connection(ENV.fetch('DATABASE_URL', nil))
   end
 end
